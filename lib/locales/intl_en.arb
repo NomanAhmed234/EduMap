@@ -1,0 +1,11 @@
+{
+  "title": "Use the Dictionary",
+  "searchHint": "Enter a word",
+  "enterWord": "Enter a word to search",
+  "noData": "No data found",
+  "error": "Error: {error}",
+  "noWord": "No word",
+  "noPhonetic": "No phonetic",
+  "noAudio": "No audio available",
+  "definition": "Definition"
+}
