@@ -39,8 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
         centerTitle: true,
         title: Text(
-          'List of Universities',
+          'Hello, Noman Ahmed!',
           style: TextStyle(
+              fontWeight: FontWeight.bold,
               color:
                   isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
               fontSize: 15),

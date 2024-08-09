@@ -255,13 +255,32 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                           : MyColor.mediumColor,
                       child: Column(
                         children: [
-                          Text(
-                            'Number: ${_numberFact!.number}',
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: isDarkMode
-                                  ? MyColor.secondaryColor
-                                  : MyColor.primaryColor,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Searched number: ${_numberFact!.number}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDarkMode
+                                        ? MyColor.primaryColor
+                                        : MyColor.secondaryColor,
+                                  ),
+                                ),
+                                Text(
+                                  'Category: ${_selectedOption}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDarkMode
+                                        ? MyColor.primaryColor
+                                        : MyColor.secondaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Column(
@@ -296,68 +315,97 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                 ),
               ),
             Text(
-              "Recent Search word",
+              "Recent Search Number",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: isDarkMode
                       ? MyColor.secondaryColor
                       : MyColor.secondaryColor),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: recentSearches.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      title: Text(recentSearches[index]),
-                      onTap: () {
-                        final number = int.tryParse(recentSearches[index]);
-                        if (number != null) {
-                          fetchNumberFact(number);
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
+            // Expanded(
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.vertical,
+            //     itemCount: recentSearches.length,
+            //     itemBuilder: (context, index) {
+            //       return Card(
+            //         margin: EdgeInsets.symmetric(vertical: 5),
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(10.0),
+            //         ),
+            //         child: ListTile(
+            //           title: Text(recentSearches[index]),
+            //           onTap: () {
+            //             final number = int.tryParse(recentSearches[index]);
+            //             if (number != null) {
+            //               fetchNumberFact(number);
+            //             }
+            //           },
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
             Expanded(
               child: ListView.builder(
                 itemCount: numberFactsData.length,
                 itemBuilder: (context, index) {
                   final number = numberFactsData.keys.elementAt(index);
                   final fact = numberFactsData[number]!;
-                  return Card(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Card(
-                        child: Row(
-                          
+                  return GestureDetector(
+                    onTap: () {
+                      fetchNumberFact(int.parse(number));
+                    },
+                    child: Card(
+                        color: MyColor.mediumColor,
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                      )
-                      //  ListTile(
-                      //   title: Card(
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(8.0),
-                      //       child: Text(
-                      //         '$number',
-                      //         style: TextStyle(
-                      //             color: MyColor.secondaryColor, fontSize: 30),
-                      //       ),
-                      //     ),
-                      //   ),
-                      //   subtitle: Text(fact),
-                      //   onTap: () {
-                      //     fetchNumberFact(int.parse(number));
-                      //   },
-                      // ),
-                      );
+                        child: Row(
+                          children: [
+                            Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '$number',
+                                  style: TextStyle(
+                                      color: MyColor.secondaryColor,
+                                      fontSize: 30),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  fact,
+                                  style:
+                                      TextStyle(color: MyColor.secondaryColor),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                        //  ListTile(
+                        //   title: Card(
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(8.0),
+                        //       child: Text(
+                        //         '$number',
+                        //         style: TextStyle(
+                        //             color: MyColor.secondaryColor, fontSize: 30),
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   subtitle: Text(fact),
+                        //   onTap: () {
+                        //     fetchNumberFact(int.parse(number));
+                        //   },
+                        // ),
+                        ),
+                  );
                 },
               ),
             ),
