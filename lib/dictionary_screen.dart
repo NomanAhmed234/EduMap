@@ -68,7 +68,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     final isDarkMode = themeProvider.isDarkMode;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
       appBar: AppBar(
         foregroundColor:
             isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
@@ -101,9 +101,10 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius:
-                    BorderRadius.circular(10), // Adjust the value as needed
+                color: isDarkMode
+                    ? MyColor.secondaryColor
+                    : MyColor.secondaryColor,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
@@ -146,8 +147,9 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                             ConnectionState.waiting) {
                           return Center(
                             child: CircularProgressIndicator(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
+                                color: isDarkMode
+                                    ? MyColor.secondaryColor
+                                    : MyColor.secondaryColor),
                           );
                         } else if (snapshot.hasError) {
                           return Center(

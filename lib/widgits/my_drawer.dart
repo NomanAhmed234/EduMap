@@ -18,7 +18,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
     return Drawer(
       surfaceTintColor:
-          isDarkMode ? MyColor.secondaryColor : MyColor.primaryColor,
+          isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
       backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
@@ -162,7 +162,9 @@ class _MyDrawerState extends State<MyDrawer> {
               // Add your drawer item onPressed functionality here
             },
           ),
-          Divider(), // Adds a divider before the theme toggle
+          Divider(
+            color: isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
+          ), // Adds a divider before the theme toggle
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
@@ -181,11 +183,10 @@ class _MyDrawerState extends State<MyDrawer> {
                   onChanged: (value) {
                     themeProvider.toggleTheme(value);
                   },
-                  activeColor: isDarkMode
-                      ? MyColor.secondaryColor
-                      : MyColor.secondaryColor,
-                  inactiveTrackColor:
+                  activeColor:
                       isDarkMode ? MyColor.secondaryColor : Colors.white,
+                  inactiveTrackColor:
+                      isDarkMode ? MyColor.primaryColor : Colors.white,
                 ),
               ],
             ),

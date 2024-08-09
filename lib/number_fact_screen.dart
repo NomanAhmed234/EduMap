@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:edumap/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:edumap/colors.dart';
@@ -5,6 +7,7 @@ import 'package:edumap/maths_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:edumap/widgits/my_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NumberFactScreen extends StatefulWidget {
   @override
@@ -12,6 +15,8 @@ class NumberFactScreen extends StatefulWidget {
 }
 
 class _NumberFactScreenState extends State<NumberFactScreen> {
+  List<String> recentSearches = [];
+  Map<String, String> numberFactsData = {};
   NumberFact? _numberFact;
   bool _isLoading = false;
   String _selectedOption = 'trivia'; // Default option
@@ -22,10 +27,59 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
     'date',
     'math',
   ];
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNumberFact(4);
+    loadRecentSearches();
+  }
+
+  Future<void> loadNumberFactsData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      numberFactsData = Map<String, String>.from(
+          prefs.getString('numberFacts') != null
+              ? json.decode(prefs.getString('numberFacts')!)
+              : {});
+    });
+  }
+
+  Future<void> saveNumberFact(String number, String fact) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    numberFactsData[number] = fact;
+    await prefs.setString('numberFacts', json.encode(numberFactsData));
+    loadNumberFactsData();
+  }
+
+  Future<void> loadRecentSearches() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      recentSearches = prefs.getStringList('recentSearches') ?? [];
+    });
+  }
+
+  Future<void> saveSearch(String search) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (recentSearches.contains(search)) {
+      recentSearches.remove(search);
+    }
+    recentSearches.insert(0, search);
+    if (recentSearches.length > 5) {
+      recentSearches = recentSearches.sublist(0, 5);
+    }
+    await prefs.setStringList('recentSearches', recentSearches);
+    loadRecentSearches();
+  }
 
   Future<void> fetchNumberFact(int number) async {
     setState(() {
       _isLoading = true;
+      saveSearch(number.toString());
     });
 
     final response = await http.get(Uri.parse(
@@ -34,6 +88,7 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
     if (response.statusCode == 200) {
       setState(() {
         _numberFact = NumberFact.fromJson(response.body);
+        saveNumberFact(number.toString(), _numberFact!.text);
         _isLoading = false;
       });
     } else {
@@ -79,8 +134,9 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
       ),
       drawer: MyDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
@@ -104,7 +160,7 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                           : MyColor.secondaryColor,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        hintText: 'Enter country name',
+                        hintText: 'Enter any Number',
                         hintStyle: TextStyle(
                             color: isDarkMode ? Colors.white38 : Colors.white38,
                             fontWeight: FontWeight.bold),
@@ -131,6 +187,7 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                   child: Text(
                     "Select Category",
                     style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: isDarkMode
                             ? MyColor.secondaryColor
                             : MyColor.secondaryColor),
@@ -167,37 +224,68 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
               ],
             ),
             if (_isLoading)
-              CircularProgressIndicator(
-                color:
-                    isDarkMode ? MyColor.primaryColor : MyColor.secondaryColor,
+              Center(
+                child: Container(
+                  width: double.maxFinite,
+                  height: 200,
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 4.0,
+                        color: isDarkMode
+                            ? MyColor.secondaryColor
+                            : MyColor.secondaryColor,
+                      ),
+                    ),
+                  ),
+                ),
               )
             else if (_numberFact != null)
-              Card(
-                color: isDarkMode ? MyColor.secondaryColor : Colors.white,
-                child: Column(
-                  children: [
-                    Text(
-                      'Number: ${_numberFact!.number}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: isDarkMode ? Colors.white : MyColor.primaryColor,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.maxFinite,
+                    height: 200,
+                    child: Card(
+                      color: isDarkMode
+                          ? MyColor.secondaryColor
+                          : MyColor.mediumColor,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Number: ${_numberFact!.number}',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: isDarkMode
+                                  ? MyColor.secondaryColor
+                                  : MyColor.primaryColor,
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              SizedBox(height: 16),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  _numberFact!.text,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: isDarkMode
+                                        ? Colors.white30
+                                        : MyColor.secondaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        _numberFact!.text,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: isDarkMode
-                              ? Colors.white30
-                              : MyColor.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               )
             else
               Text(
@@ -207,6 +295,72 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                   color: isDarkMode ? Colors.white : MyColor.primaryColor,
                 ),
               ),
+            Text(
+              "Recent Search word",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode
+                      ? MyColor.secondaryColor
+                      : MyColor.secondaryColor),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: recentSearches.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: ListTile(
+                      title: Text(recentSearches[index]),
+                      onTap: () {
+                        final number = int.tryParse(recentSearches[index]);
+                        if (number != null) {
+                          fetchNumberFact(number);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: numberFactsData.length,
+                itemBuilder: (context, index) {
+                  final number = numberFactsData.keys.elementAt(index);
+                  final fact = numberFactsData[number]!;
+                  return Card(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Card(
+                        child: Row(
+                          
+                        ),
+                      )
+                      //  ListTile(
+                      //   title: Card(
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(8.0),
+                      //       child: Text(
+                      //         '$number',
+                      //         style: TextStyle(
+                      //             color: MyColor.secondaryColor, fontSize: 30),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   subtitle: Text(fact),
+                      //   onTap: () {
+                      //     fetchNumberFact(int.parse(number));
+                      //   },
+                      // ),
+                      );
+                },
+              ),
+            ),
           ],
         ),
       ),

@@ -21,7 +21,7 @@ class MyBottomNavigationBar extends StatefulWidget {
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 2;
   static List<Widget> _widgetOptions = <Widget>[
     UniversityScreen(),
     DictionaryScreen(),
@@ -45,7 +45,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor:
-            isDarkMode ? MyColor.secondaryColor : MyColor.primaryColor,
+            isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
         unselectedItemColor:
             isDarkMode ? Colors.white60 : MyColor.secondaryColor,
         backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
@@ -69,7 +69,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
-            icon: Icon(Icons.numbers),
+            icon: Icon(Icons.category),
             label: 'NumberFact',
           ),
           BottomNavigationBarItem(

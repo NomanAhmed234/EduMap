@@ -203,16 +203,15 @@ class _UniversityScreenState extends State<UniversityScreen> {
                                     var university = snapshot.data![index];
                                     return Card(
                                       color: isDarkMode
-                                          ? MyColor.secondaryColor
+                                          ? MyColor.primaryColor
                                           : Colors.white,
                                       child: ListTile(
                                         title: Text(
                                           university.name ?? 'No name',
                                           style: TextStyle(
                                               color: isDarkMode
-                                                  ? MyColor.primaryColor
-                                                  : const Color.fromARGB(
-                                                      255, 7, 16, 21),
+                                                  ? MyColor.secondaryColor
+                                                  : MyColor.secondaryColor,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         subtitle: Column(
@@ -223,11 +222,9 @@ class _UniversityScreenState extends State<UniversityScreen> {
                                               university.country ??
                                                   'No country',
                                               style: TextStyle(
-                                                color: isDarkMode
-                                                    ? MyColor.primaryColor
-                                                    : const Color.fromARGB(
-                                                        255, 7, 16, 21),
-                                              ),
+                                                  color: isDarkMode
+                                                      ? Colors.white38
+                                                      : MyColor.primaryColor),
                                             ),
                                             for (var webPage
                                                 in university.webPages ?? [])
@@ -244,11 +241,9 @@ class _UniversityScreenState extends State<UniversityScreen> {
                                                   webPage,
                                                   style: TextStyle(
                                                     color: isDarkMode
-                                                        ? MyColor.primaryColor
+                                                        ? MyColor.secondaryColor
                                                         : MyColor
                                                             .secondaryColor,
-                                                    decoration: TextDecoration
-                                                        .underline,
                                                   ),
                                                 ),
                                               ),
