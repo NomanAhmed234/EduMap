@@ -21,8 +21,39 @@ class UniversityScreen extends StatefulWidget {
 
 class _UniversityScreenState extends State<UniversityScreen> {
   String n = "Pakistan";
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller =
+      TextEditingController(text: "Pakistan");
+  List<String> recentSearches = [];
+  Set<String> recentSearchesSet = {};
   Future<List<UniversityModel>>? _futureUniversities;
+
+  Future<void> loadRecentSearches() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      recentSearches = prefs.getStringList('recentSearches') ?? [];
+      recentSearchesSet = recentSearches.toSet();
+    });
+  }
+
+  Future<void> saveSearch(String search) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Remove the search if it already exists in the list
+    if (recentSearches.contains(search)) {
+      recentSearches.remove(search);
+    }
+
+    // Add the new search at the beginning of the list
+    recentSearches.insert(0, search);
+
+    // Keep the list size within the limit (e.g., 5)
+    if (recentSearches.length > 5) {
+      recentSearches = recentSearches.sublist(0, 5);
+    }
+
+    await prefs.setStringList('recentSearches', recentSearches);
+    loadRecentSearches();
+  }
 
   Future<List<UniversityModel>> getPostApi(String country) async {
     searchData.add(country);
@@ -48,6 +79,7 @@ class _UniversityScreenState extends State<UniversityScreen> {
   void _search() {
     setState(() {
       _futureUniversities = getPostApi(_controller.text);
+      saveSearch(_controller.text);
     });
   }
 
@@ -57,6 +89,12 @@ class _UniversityScreenState extends State<UniversityScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  @override
+  void initState() {
+    _search();
+    super.initState();
   }
 
   @override
@@ -178,18 +216,29 @@ class _UniversityScreenState extends State<UniversityScreen> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: searchData.length,
                                     itemBuilder: (context, int index) {
-                                      return Card(
-                                        color: isDarkMode
-                                            ? MyColor.primaryColor
-                                            : Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(searchData[index],
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text =
+                                                searchData[index];
+                                            _search();
+                                          });
+                                        },
+                                        child: Card(
+                                          color: isDarkMode
+                                              ? MyColor.primaryColor
+                                              : Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              searchData[index],
                                               style: TextStyle(
-                                                  color: isDarkMode
-                                                      ? MyColor.secondaryColor
-                                                      : MyColor
-                                                          .secondaryColor)),
+                                                color: isDarkMode
+                                                    ? MyColor.secondaryColor
+                                                    : MyColor.secondaryColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       );
                                     },

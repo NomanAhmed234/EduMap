@@ -183,10 +183,12 @@ class _MyDrawerState extends State<MyDrawer> {
                   onChanged: (value) {
                     themeProvider.toggleTheme(value);
                   },
-                  activeColor:
-                      isDarkMode ? MyColor.secondaryColor : Colors.white,
-                  inactiveTrackColor:
-                      isDarkMode ? MyColor.primaryColor : Colors.white,
+                  activeColor: isDarkMode
+                      ? MyColor.secondaryColor
+                      : MyColor.secondaryColor,
+                  inactiveTrackColor: isDarkMode
+                      ? MyColor.primaryColor
+                      : MyColor.secondaryColor,
                 ),
               ],
             ),

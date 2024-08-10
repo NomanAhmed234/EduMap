@@ -356,7 +356,7 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                       fetchNumberFact(int.parse(number));
                     },
                     child: Card(
-                        color: MyColor.mediumColor,
+                        color: isDarkMode ? MyColor.primaryColor : Colors.white,
                         margin: EdgeInsets.symmetric(vertical: 5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -364,13 +364,17 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                         child: Row(
                           children: [
                             Card(
-                              color: Colors.white,
+                              color: isDarkMode
+                                  ? MyColor.primaryColor
+                                  : MyColor.secondaryColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   '$number',
                                   style: TextStyle(
-                                      color: MyColor.secondaryColor,
+                                      color: isDarkMode
+                                          ? MyColor.secondaryColor
+                                          : Colors.white,
                                       fontSize: 30),
                                 ),
                               ),
@@ -381,8 +385,10 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                                 scrollDirection: Axis.horizontal,
                                 child: Text(
                                   fact,
-                                  style:
-                                      TextStyle(color: MyColor.secondaryColor),
+                                  style: TextStyle(
+                                      color: isDarkMode
+                                          ? Colors.white38
+                                          : MyColor.secondaryColor),
                                 ),
                               ),
                             )

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'theme.dart';
 import 'theme_provider.dart';
@@ -18,7 +19,10 @@ class DictionaryScreen extends StatefulWidget {
 }
 
 class _DictionaryScreenState extends State<DictionaryScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller =
+      TextEditingController(text: 'today');
+
+  List<String> recentSearches = [];
   Future<List<DictionaryModel>>? _futureDictionary;
   final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -40,9 +44,17 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     }
   }
 
+  @override
+  void initState() {
+    _search();
+    loadRecentSearches();
+    super.initState();
+  }
+
   void _search() {
     setState(() {
       _futureDictionary = getPostApi(_controller.text);
+      saveSearch(_controller.text);
     });
   }
 
@@ -62,6 +74,26 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     }
   }
 
+  Future<void> loadRecentSearches() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      recentSearches = prefs.getStringList('recentSearches') ?? [];
+    });
+  }
+
+  Future<void> saveSearch(String search) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (recentSearches.contains(search)) {
+      recentSearches.remove(search);
+    }
+    recentSearches.insert(0, search);
+    if (recentSearches.length > 5) {
+      recentSearches = recentSearches.sublist(0, 5);
+    }
+    await prefs.setStringList('recentSearches', recentSearches);
+    loadRecentSearches();
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -75,7 +107,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
         backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
         centerTitle: true,
         title: Text(
-          'Use the Dictionary',
+          'Dictionary',
           style: TextStyle(
               color:
                   isDarkMode ? MyColor.secondaryColor : MyColor.secondaryColor,
@@ -294,6 +326,46 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                         }
                       },
                     ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: recentSearches.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _controller.text = recentSearches[index];
+                        _search();
+                      });
+                    },
+                    child: Card(
+                      color: isDarkMode ? MyColor.primaryColor : Colors.white,
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          recentSearches[index],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode
+                                ? MyColor.secondaryColor
+                                : MyColor.secondaryColor,
+                          ),
+                        ),
+                        // onTap: () {
+                        //   final number = int.tryParse(recentSearches[index]);
+                        //   if (number != null) {
+                        //     fetchNumberFact(number);
+                        //   }
+                        // },
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

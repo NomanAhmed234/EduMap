@@ -1,6 +1,7 @@
 import 'package:edumap/colors.dart';
 import 'package:edumap/dictionary_screen.dart';
 import 'package:edumap/home_screen.dart';
+import 'package:edumap/notification_srceen.dart';
 import 'package:edumap/number_fact_screen.dart';
 import 'package:edumap/theme_provider.dart';
 import 'package:edumap/university_screen.dart';
@@ -27,7 +28,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     DictionaryScreen(),
     HomeScreen(),
     NumberFactScreen(),
-    Text('Profile Page'),
+    NotificationScreen(),
   ];
 
   void _onItemTapped(int index) {
