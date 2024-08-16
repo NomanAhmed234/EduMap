@@ -293,7 +293,7 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: isDarkMode
-                                        ? Colors.white30
+                                        ? Colors.white60
                                         : MyColor.secondaryColor,
                                   ),
                                 ),
@@ -355,34 +355,35 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                     onTap: () {
                       fetchNumberFact(int.parse(number));
                     },
-                    child: Card(
-                        color: isDarkMode ? MyColor.primaryColor : Colors.white,
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Row(
-                          children: [
-                            Card(
-                              color: isDarkMode
-                                  ? MyColor.primaryColor
-                                  : MyColor.secondaryColor,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '$number',
-                                  style: TextStyle(
-                                      color: isDarkMode
-                                          ? MyColor.secondaryColor
-                                          : Colors.white,
-                                      fontSize: 30),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Card(
+                          color:
+                              isDarkMode ? MyColor.primaryColor : Colors.white,
+                          margin: EdgeInsets.symmetric(vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Row(
+                            children: [
+                              Card(
+                                color: isDarkMode
+                                    ? MyColor.primaryColor
+                                    : MyColor.secondaryColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '$number',
+                                    style: TextStyle(
+                                        color: isDarkMode
+                                            ? MyColor.secondaryColor
+                                            : Colors.white,
+                                        fontSize: 30),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   fact,
                                   style: TextStyle(
@@ -390,27 +391,27 @@ class _NumberFactScreenState extends State<NumberFactScreen> {
                                           ? Colors.white38
                                           : MyColor.secondaryColor),
                                 ),
-                              ),
-                            )
-                          ],
-                        )
-                        //  ListTile(
-                        //   title: Card(
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.all(8.0),
-                        //       child: Text(
-                        //         '$number',
-                        //         style: TextStyle(
-                        //             color: MyColor.secondaryColor, fontSize: 30),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   subtitle: Text(fact),
-                        //   onTap: () {
-                        //     fetchNumberFact(int.parse(number));
-                        //   },
-                        // ),
-                        ),
+                              )
+                            ],
+                          )
+                          //  ListTile(
+                          //   title: Card(
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(8.0),
+                          //       child: Text(
+                          //         '$number',
+                          //         style: TextStyle(
+                          //             color: MyColor.secondaryColor, fontSize: 30),
+                          //       ),
+                          //     ),
+                          //   ),
+                          //   subtitle: Text(fact),
+                          //   onTap: () {
+                          //     fetchNumberFact(int.parse(number));
+                          //   },
+                          // ),
+                          ),
+                    ),
                   );
                 },
               ),

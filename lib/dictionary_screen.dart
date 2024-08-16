@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:edumap/colors.dart';
 import 'package:edumap/dictionary_model.dart';
+import 'package:edumap/translation.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:http/http.dart' as http;
@@ -243,11 +244,8 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                                                 print('No audio available');
                                               }
                                             },
-                                            icon: Icon(
-                                              Icons.speaker_rounded,
-                                              color: isDarkMode
-                                                  ? MyColor.secondaryColor
-                                                  : MyColor.secondaryColor,
+                                            icon: ImageIcon(
+                                              AssetImage('assets/speaker.png'),
                                             ),
                                           ),
                                           Text(
@@ -355,12 +353,6 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
                                 : MyColor.secondaryColor,
                           ),
                         ),
-                        // onTap: () {
-                        //   final number = int.tryParse(recentSearches[index]);
-                        //   if (number != null) {
-                        //     fetchNumberFact(number);
-                        //   }
-                        // },
                       ),
                     ),
                   );

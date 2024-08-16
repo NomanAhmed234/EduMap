@@ -42,6 +42,8 @@ dependencies:
   provider: ^6.0.5
   flutter_localization: ^0.2.1
   carousel_slider: ^4.0.0
+  flutter_easy_faq: ^1.0.1
+  translator: ^1.0.0
   
 
 dev_dependencies:

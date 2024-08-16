@@ -4,6 +4,7 @@ import 'package:edumap/home_screen.dart';
 import 'package:edumap/notification_srceen.dart';
 import 'package:edumap/number_fact_screen.dart';
 import 'package:edumap/theme_provider.dart';
+import 'package:edumap/translation.dart';
 import 'package:edumap/university_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:edumap/colors.dart';
@@ -28,7 +29,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     DictionaryScreen(),
     HomeScreen(),
     NumberFactScreen(),
-    NotificationScreen(),
+    TranslatorWidget(),
   ];
 
   void _onItemTapped(int index) {
@@ -75,8 +76,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             backgroundColor: isDarkMode ? MyColor.primaryColor : Colors.white,
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.translate),
+            label: 'Translate',
           ),
         ],
       ),
